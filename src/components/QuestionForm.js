@@ -20,7 +20,6 @@ function QuestionForm(props) {
   function handleSubmit(event) {
   event.preventDefault();
 
-  // Format answers array
   const newQuestion = {
     prompt: formData.prompt,
     answers: [formData.answer1, formData.answer2, formData.answer3, formData.answer4],

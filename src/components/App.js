@@ -7,14 +7,12 @@ function App() {
   const [page, setPage] = useState("List");
   const [questions, setQuestions] = useState([]);
 
-  // Fetch questions on load
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((r) => r.json())
       .then((data) => setQuestions(data));
   }, []);
 
-  // Add new question
   function handleAddQuestion(newQuestion) {
     fetch("http://localhost:4000/questions", {
       method: "POST",
@@ -27,25 +25,28 @@ function App() {
       );
   }
 
-  // Delete question
   function handleDeleteQuestion(id) {
-    fetch(`http://localhost:4000/questions/${id}`, { method: "DELETE" })
-      .then(() => setQuestions(questions.filter((q) => q.id !== id)));
+    fetch(`http://localhost:4000/questions/${id}`, {
+      method: "DELETE",
+    }).then(() => {
+      setQuestions(questions.filter((q) => q.id !== id));
+    });
   }
 
-  // Update question
-  function handleUpdateQuestion(id, correctIndex) {
+  function handleUpdateQuestion(id, correctIndexString) {
+    const correctIndex = Number(correctIndexString);
+
     fetch(`http://localhost:4000/questions/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ correctIndex }),
-    })
-      .then((r) => r.json())
-      .then((updatedQuestion) =>
-        setQuestions(
-          questions.map((q) => (q.id === id ? updatedQuestion : q))
-        )
-      );
+    });
+
+    setQuestions(
+      questions.map((q) =>
+        q.id === id ? { ...q, correctIndex: correctIndexString } : q
+      )
+    );
   }
 
   return (
